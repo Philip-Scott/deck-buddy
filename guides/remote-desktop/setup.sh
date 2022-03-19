@@ -14,21 +14,17 @@ warning() { echo "[WARNING] $*" | tee -a "$LOG_FILE" >&2 ; }
 error()   { echo "[ERROR]   $*" | tee -a "$LOG_FILE" >&2 ; }
 fatal()   { echo "[FATAL]   $*" | tee -a "$LOG_FILE" >&2 ; exit 1 ; }
 
-errorExit() {
-    error "krfb setup failed. Please share your feedback at https://raw.githubusercontent.com/Philip-Scott/deck-buddy/issues"
-    read
+exit () {
+    info "Please share your feedback at https://github.com/Philip-Scott/deck-buddy/issues"
 }
 
-if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
-    trap errorExit EXIT
+trap exit EXIT
 
-    flatpak install org.kde.krfb -y
+flatpak install org.kde.krfb -y
 
-    # We need to give krfb access to the network, or else the service will not be available
-    sudo flatpak override org.kde.krfb --share=network
+# We need to give krfb access to the network, or else the service will not be available
+sudo flatpak override org.kde.krfb --share=network
 
-    xdg-open https://raw.githubusercontent.com/Philip-Scott/deck-buddy/master/guides/remote-desktop/
+xdg-open https://github.com/Philip-Scott/deck-buddy/blob/master/guides/remote-desktop/readme.md > /dev/null &
 
-    info "installation completed! Press enter to quit"
-    read
-fi
+info "installation completed! Press enter to quit"

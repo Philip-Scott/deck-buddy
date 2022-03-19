@@ -43,7 +43,7 @@ public class ScriptCard : Gtk.Grid {
         add (action_button);
 
         action_button.clicked.connect (() => {
-            GLib.Process.spawn_command_line_async (@"konsole -e \"bash -c 'curl $script_url | bash'\"");
+            GLib.Process.spawn_command_line_async (@"konsole -e \"bash -c 'curl $script_url | bash; read'\"");
         });
 
         show_all ();
