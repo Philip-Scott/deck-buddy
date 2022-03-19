@@ -29,6 +29,6 @@ if [[ "${BASH_SOURCE[0]}" = "$0" ]]; then
 
     xdg-open https://raw.githubusercontent.com/Philip-Scott/deck-buddy/master/guides/remote-desktop/
 
-    info "installation completed!"
+    info "installation completed! Press enter to quit"
     read
 fi
