@@ -43,8 +43,9 @@ public class MainWindow : Gtk.Window {
 
         scrollbox.add (script_list);
         add (scrollbox);
-
-        create_script_card ("Remote Desktop ", "https://raw.githubusercontent.com/Philip-Scott/deck-buddy/master/guides/remote-desktop/setup.sh");        
+        
+        create_script_card ("Add app to Steam ", "https://raw.githubusercontent.com/Philip-Scott/deck-buddy/master/guides/add-app-to-steam/run.sh");
+        create_script_card ("Remote Desktop ", "https://raw.githubusercontent.com/Philip-Scott/deck-buddy/master/guides/remote-desktop/setup.sh");
 
         show_all ();
     }
