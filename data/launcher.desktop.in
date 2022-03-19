@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Deck Buddy
+GenericName=Deck Buddy
+Comment=Automatic installation and configuration of Steam Deck utilities
+Categories=Utility;
+Exec=com.github.philip_scott.deck_buddy
+Icon=com.github.philip_scott.deck_buddy
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=com.github.philip_scott.deck_buddy
+Keywords=DeckBuddy;Buddy;Install;

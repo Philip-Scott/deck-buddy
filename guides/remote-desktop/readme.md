@@ -4,17 +4,13 @@ Tweaking your Steam Deck in desktop mode is much easier with a keyboard and mous
 
 ![remote-desktop demo](.screenshots/remote-desktop-demo.png)
 
+This guide assumes you already ran `setup.sh` from this folder, or via the Deck-Buddy app.
+
 ## Steam Deck Setup
-
-We are going to install Krfb as a Flatpak, and give it permissions to use the network. 
-
-
-- Run the `setup.sh` script from this folder. 
 
 Once installed, launch Krfb. This can be easly done from the Application Launcher > Internet > Krfb
 
 ![Launching krfb](.screenshots/launching-krfb.png)
-
 
 If everything was done correctly, you should see an IP Address other than 127.0.0.1 on the Connection Details box as seen bellow: 
 
@@ -25,7 +21,6 @@ If everything was done correctly, you should see an IP Address other than 127.0.
 Install [Krdc](https://userbase.kde.org/Krdc) (or any VNC Client) on the machine you wish to access your Steam Deck from.
 
 Launch the app. Select VNC from the `Connect to` dropdown, and type in `deck@YOUR_IP_ADDRESS:5900`, replacing "YOUR_IP_ADDRESS" with the IP shown on the image above. If you changed the username for desktop mode, replace `deck` with that username. 
-
 
 ![krdc config](.screenshots/krdc-connect.png)
 

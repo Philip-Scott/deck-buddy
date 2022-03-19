@@ -1,0 +1,67 @@
+name: "CI"
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: elementary/docker:unstable
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Dependencies
+      run: |
+        apt update
+        apt install -y valac meson file appstream-util xvfb at-spi2-core wget appstream elementary-theme elementary-icon-theme libgtk-3-common patchelf librsvg2-bin
+    - name: Build
+      run: |
+        meson build --prefix /usr
+        ninja -C build
+        ninja -C build install
+        xvfb-run -a -s "-screen 0 1024x768x24" \
+          dbus-run-session meson test -C build --no-rebuild -v --no-stdsplit --wrap catchsegv
+    - name: cleanup xvfb
+      run: |
+        xvfb_pids=`ps aux | grep tmp/xvfb-run | grep -v grep | awk '{print $2}'`
+        if [ "$xvfb_pids" != "" ]; then
+          echo "Killing the following xvfb processes: $xvfb_pids"
+          sudo kill $xvfb_pids
+        else
+          echo "No xvfb processes to kill"
+        fi
+    - name: AppImage
+      run: |
+        APPDIR=$(readlink -f appdir) # Why is this needed?
+        DESTDIR="$APPDIR" ninja -C build install
+        wget -c -q https://github.com/$(wget -q https://github.com/probonopd/go-appimage/releases -O - | grep "appimagetool-.*-x86_64.AppImage" | head -n 1 | cut -d '"' -f 2)
+        chmod +x appimagetool-*.AppImage
+        mkdir -p "$APPDIR"/usr/share/icons/hicolor/256x256/apps/
+        rsvg-convert -w 256 -h 256 "$APPDIR"/usr/share/icons/hicolor/128x128/apps/com.github.philip_scott.deck_buddy.svg > "$APPDIR"/usr/share/icons/hicolor/256x256/apps/com.github.philip_scott.deck_buddy.png
+
+        find "$APPDIR"
+
+        ./appimagetool-*.AppImage -s deploy "$APPDIR"/usr/share/applications/*.desktop --appimage-extract-and-run # Bundle EVERYTHING
+        
+        sed -i -e 's|/usr||g' "$APPDIR"/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders.cache # FIXME in https://github.com/probonopd/go-appimage
+
+        mkdir -p "$APPDIR"/usr/share/icons ; cp -r /usr/share/icons/elementary "$APPDIR"/usr/share/icons/
+        mkdir -p "$APPDIR"/usr/share/themes ; cp -r /usr/share/themes/elementary "$APPDIR"/usr/share/themes/ 
+        rm -rf "$APPDIR"/usr/share/themes/Default ; sed -i -e 's|Default|elementary|g' "$APPDIR"/AppRun # Use the elementary theme rather than the Gtk Default theme
+
+        ./appimagetool-*.AppImage "$APPDIR" --appimage-extract-and-run # turn AppDir into AppImage
+
+        mv Deck_Buddy*.AppImage deck-buddy.AppImage # Rename App Image for static links
+
+    - name: Release AppImage
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        title: AppImage
+        automatic_release_tag: continuous
+        prerelease: true
+        draft: false
+        files: |
+          deck-buddy.AppImage
+        repo_token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,16 @@
+app-id: com.github.philip_scott.deck_buddy
+runtime: io.elementary.Platform
+runtime-version: '6'
+sdk: io.elementary.Sdk
+command: com.github.philip_scott.deck_buddy
+finish-args:
+  - '--share=ipc'
+  - '--socket=fallback-x11'
+  - '--socket=wayland'
+  - '--system-talk-name=org.freedesktop.Accounts'
+modules:
+  - name: deckbuddy
+    buildsystem: meson
+    sources:
+      - type: dir
+        path: .
