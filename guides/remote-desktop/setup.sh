@@ -21,7 +21,7 @@ exit () {
 trap exit EXIT
 
 flatpak remote-add --if-not-exists kdeapps --from https://distribute.kde.org/kdeapps.flatpakrepo
-flatpak install flathub org.kde.krfb -y
+flatpak install kdeapps org.kde.krfb -y
 
 # We need to give krfb access to the network, or else the service will not be available
 sudo flatpak override org.kde.krfb --share=network
